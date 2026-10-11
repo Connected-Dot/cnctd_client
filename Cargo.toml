@@ -1,0 +1,11 @@
+[package]
+name = "cnctd_client"
+version = "1.0.0-alpha.1"
+edition = "2021"
+authors = ["Connected Dot Inc.", "Kyle Ebner <kyle@cnctd.world>"]
+description = "Client for servers built with the cnctd_server Rust crate: JSON envelopes over REST, the WebSocket with reconnect, push routing by channel, request/response over the socket"
+repository = "https://github.com/Connected-Dot/cnctd_client"
+license = "MIT"
+keywords = ["module"]
+
+[dependencies]
