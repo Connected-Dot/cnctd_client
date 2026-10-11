@@ -8,4 +8,34 @@ repository = "https://github.com/Connected-Dot/cnctd_client"
 license = "MIT"
 keywords = ["module"]
 
+[features]
+default = ["rustls"]
+# TLS for both HTTP and the WebSocket. Pick one. Neither installs a rustls
+# crypto provider: a binary that also links a second provider (ring and
+# aws-lc-rs through other crates) must call
+# `rustls::crypto::ring::default_provider().install_default()` itself.
+rustls = ["reqwest/rustls-tls", "tokio-tungstenite/rustls-tls-webpki-roots"]
+native-tls = ["reqwest/native-tls", "tokio-tungstenite/native-tls"]
+
 [dependencies]
+# The wire types. They move to `cnctd_protocol` (no axum) at 1.0.0-alpha.2;
+# the paths this crate uses are re-exported from both.
+cnctd_server = { version = "1.0.0-alpha.1", default-features = false }
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+reqwest = { version = "0.12", default-features = false, features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
+tokio-tungstenite = { version = "0.26", default-features = false, features = ["connect", "handshake"] }
+tracing = "0.1"
+url = "2"
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+anyhow = "1"
+tokio = { version = "1", features = ["full"] }
+
+# Its own workspace: the crate lives inside the cnctd monorepo, whose root
+# Cargo.toml is a workspace this crate is not a member of.
+[workspace]
