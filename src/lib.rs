@@ -43,14 +43,11 @@ pub use socket::{Backoff, Event, Frame, RegisterFn, Registration, Socket, Socket
 
 /// The wire types, as the server defines them.
 pub mod protocol {
-    pub use cnctd_server::router::{
-        error::{ErrorCode, ErrorResponse},
-        message::{Message, SocketMessage, UserMessage, UserSocketMessage},
-        response::{SocketResponse, SuccessCode, SuccessResponse},
-        HttpMethod,
+    pub use cnctd_protocol::{
+        ConnectionFormat, ConnectionInfo, ErrorCode, ErrorResponse, HttpMethod, Message, ServerInfo,
+        ServerStatus, SocketMessage, SocketResponse, SuccessCode, SuccessResponse, UpgradeQuery,
+        UserMessage, UserSocketMessage,
     };
-    pub use cnctd_server::server::server_info::{ServerInfo, ServerStatus};
-    pub use cnctd_server::socket::connection::{ConnectionFormat, ConnectionInfo};
 }
 
 pub use protocol::*;

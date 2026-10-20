@@ -18,9 +18,8 @@ rustls = ["reqwest/rustls-tls", "tokio-tungstenite/rustls-tls-webpki-roots"]
 native-tls = ["reqwest/native-tls", "tokio-tungstenite/native-tls"]
 
 [dependencies]
-# The wire types. They move to `cnctd_protocol` (no axum) at 1.0.0-alpha.2;
-# the paths this crate uses are re-exported from both.
-cnctd_server = { version = "1.0.0-alpha.1", default-features = false }
+# The wire types, shared with cnctd_server. No HTTP server library here.
+cnctd_protocol = "1.0.0-alpha.1"
 futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 reqwest = { version = "0.12", default-features = false, features = ["json"] }
 serde = { version = "1", features = ["derive"] }
@@ -34,8 +33,6 @@ uuid = { version = "1", features = ["v4"] }
 
 [dev-dependencies]
 anyhow = "1"
+# tests/live.rs runs the client against a real cnctd_server.
+cnctd_server = "1.0.0-alpha.2"
 tokio = { version = "1", features = ["full"] }
-
-# Its own workspace: the crate lives inside the cnctd monorepo, whose root
-# Cargo.toml is a workspace this crate is not a member of.
-[workspace]

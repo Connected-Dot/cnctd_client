@@ -43,7 +43,7 @@ impl RestRouter for Rest {
                 "headers": req.headers,
             }))
             .into()),
-            ("fail", Some("bad-request")) => Err(bad_request!("you asked for it")),
+            ("fail", Some("bad-request")) => Err(bad_request!("requested failure")),
             ("fail", Some("unauthorized")) => Err(unauthorized!("no token")),
             ("bin", _) => Ok(BinaryResponse::octet_stream(b"BIN".to_vec()).into()),
             ("connections", Some("register")) => {
@@ -135,7 +135,7 @@ async fn rest_round_trip() {
         .header("X-Test", "yes")
         .build()
         .unwrap();
-    c.set_connection_id(Some("pretend-conn".into()));
+    c.set_connection_id(Some("test-conn".into()));
 
     let res = c.post("echo", "ctx", json!({ "a": 1 })).await.unwrap();
     assert!(res.success);
@@ -144,7 +144,7 @@ async fn rest_round_trip() {
     assert_eq!(d["path"], "/api/echo/ctx");
     assert_eq!(d["data"], json!({ "a": 1 }));
     assert_eq!(d["auth_token"], "Bearer tok-1", "Authorization goes through verbatim");
-    assert_eq!(d["connection_id"], "pretend-conn", "Client-Id carries the connection id");
+    assert_eq!(d["connection_id"], "test-conn", "Client-Id carries the connection id");
     assert_eq!(d["ip_address"], "127.0.0.1");
     assert_eq!(d["headers"]["x-test"], "yes", "extra headers ride every request");
 
@@ -155,7 +155,7 @@ async fn rest_round_trip() {
 
     match c.get("fail", "bad-request", json!({})).await {
         Err(Error::Api(e)) => {
-            assert_eq!((e.http_status, e.status.as_str(), e.msg.as_deref()), (400, "BadRequest", Some("you asked for it")));
+            assert_eq!((e.http_status, e.status.as_str(), e.msg.as_deref()), (400, "BadRequest", Some("requested failure")));
             assert_eq!(e.code(), ErrorCode::BadRequest);
             assert!(!e.is_auth());
         }
